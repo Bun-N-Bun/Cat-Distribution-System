@@ -1,5 +1,3 @@
-//REVISED
-
 #include <iostream>
 #include <string>
 #include "raylib.h"
@@ -13,13 +11,14 @@ int main() {
     const int SCREEN_WIDTH = 1400;
     const int SCREEN_HEIGHT = 800;
 
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Cat Distribution System");
-    SetTargetFPS(60);
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Cat Distribution System");  //Game Window Name
+    SetTargetFPS(60);  //Set FPS to 60
     InitAudioDevice();
 
     Screen currentScreen = SCREEN_MENU;
     Screen previousScreen = SCREEN_HELP;
 
+    //Loading Sound
     Sound starting = LoadSound("resources/music/starting.ogg");
     Sound pageflip = LoadSound("resources/music/page_flip.wav");
     Sound SFXpull = LoadSound("resources/music/pull_sfx.mp3");
@@ -38,6 +37,7 @@ int main() {
     SetMusicVolume(bgm2, 0.3f);
 
 
+    // Bacakground Textures
     Texture2D BG_MENU = LoadTexture("resources/background.png");
     Texture2D BG_GAME = LoadTexture("resources/gacha_bg.png");
     Texture2D BG_HELP = LoadTexture("resources/help_screen.png");
@@ -48,7 +48,8 @@ int main() {
     Texture2D box1 = LoadTexture("resources/resized_box1.png");
     Texture2D box2 = LoadTexture("resources/resized_box5.png");
 
-    //Cat Gacha Textures
+
+    // Cat Gacha Textures
     const int CommonTexturesCount = 5;
     Texture2D CommonTextures[CommonTexturesCount];
     CommonTextures[0] = LoadTexture("resources/sprites/ugly_cat.png");
@@ -74,7 +75,8 @@ int main() {
     Texture2D SSS_Textures[SSS_TexturesCount];
     SSS_Textures[0] = LoadTexture("resources/sprites/happy_cat.png");
 
-    //Collection Textures
+
+    // Collection Textures
     Texture2D _ugly_cat = LoadTexture("resources/Collection/ugly_cat.png");
     Texture2D _blink_mf = LoadTexture("resources/Collection/blink_mf.png");
     Texture2D _mr_peebles = LoadTexture("resources/Collection/mr_peebles.png");
@@ -93,10 +95,11 @@ int main() {
 
     Texture2D _happy_cat = LoadTexture("resources/Collection/happy_cat.png");
 
-    //Main sprite texture
+
+    // Main sprite texture
     Texture sprite = S_Textures[0];
 
-    //Rectangle Array for animation frames
+    // Rectangle Array for animation frames
     Rectangle frames[6] = {
         { 0, 0, 400, 400 },
         { 400, 0, 400, 400 },
@@ -106,58 +109,65 @@ int main() {
         { 2000, 0, 400, 400 }
     };
 
+    //Frames variables
     float frameTime = 0.1f;
     int currentFrame = 0;
-    float timer2 = 0.0f;
+    float timer = 0.0f;
 
     double Common_chance = 0, S_chance = 0, SS_chance = 0, SSS_chance = 0;
 
     int randomIndex;
-    int pull_counter = 0, S_counter = 0;   //counters
+    int pull_counter = 0, S_counter = 0;   // counters
     bool common_rarity = false, S_rarity = false, SS_rarity = false, SSS_rarity = false;
     bool indexToggle = true;
 
-    float timer = 0;  //frame timer
+    float text_timer = 0;  // frame timer
     bool showText = true;
     bool muted = false;
     bool bgm_changer = false;
-    bool checker = true;  //Condition Checker
+    bool checker = true;  // Condition Checker
 
-    bool ugly_cat = false, blink_mf = false, mr_peebles = false, serious_cat = false, gigacat = false,
+    bool ugly_cat = false, blink_mf = false, mr_peebles = false, serious_cat = false, gigacat = false, // Cat Collection switch
         long_cat = false, el_gato = false, smudge = false, bingus = false, banana = false,
-        dancing_cat = false, popcat = false, maxwell = false, happy_cat = false;
+        dancing_cat = false, popcat = false, maxwell = false, happy_cat = false;  
 
     bool tenPulls = false;
     bool peebles_switch = true;
 
     bool prompt_common = false, prompt_S = false, prompt_SS = false, prompt_SSS = false;
 
+    int space_counter = 0;
+
+    // Start of Game
     while (!WindowShouldClose()) {
-        WindowDisplay(currentScreen, previousScreen, starting, pageflip, indexToggle, pull_counter, checker);
+        WindowDisplay(currentScreen, previousScreen, starting, pageflip, indexToggle, pull_counter, checker, space_counter);
         PlayMusic(bgm1, bgm2, muted, bgm_changer);
 
         BeginDrawing();
         
-
+        // Main Menu
         if (currentScreen == SCREEN_MENU) {
             DrawTexture(BG_MENU, 0, 0, WHITE);
-            Text(timer, showText, currentScreen, SCREEN_WIDTH, SCREEN_HEIGHT);
+            Text(text_timer, showText, currentScreen, SCREEN_WIDTH, SCREEN_HEIGHT);
         }
 
+        // Help Screen
         else if (currentScreen == SCREEN_HELP) {
             DrawTexture(BG_HELP, 0, 0, WHITE);
-            Text(timer, showText, currentScreen, SCREEN_WIDTH, SCREEN_HEIGHT);
+            Text(text_timer, showText, currentScreen, SCREEN_WIDTH, SCREEN_HEIGHT);
         }
 
+        // Main Game Screen
         else if (currentScreen == SCREEN_GAME) {
-            bgm_changer = false;
+            bgm_changer = true;
 
             DrawTexture(BG_GAME, 0, 0, WHITE);
             DrawTexture(box1, (SCREEN_WIDTH / 2 - (box1.width / 2)), SCREEN_HEIGHT / 2 - 20, WHITE);
-            pullChance(pull_counter, Common_chance, S_chance, SS_chance, SSS_chance);
-
             TextCounter(pull_counter, SCREEN_WIDTH);
-            RarityPromptToggle(prompt_common, prompt_S, prompt_SS, prompt_SSS);
+
+            // Gacha System & Text Prompt based on rarity toggle
+            PullChance(pull_counter, Common_chance, S_chance, SS_chance, SSS_chance);
+            TextRarityToggle(prompt_common, prompt_S, prompt_SS, prompt_SSS);
 
             if (IsKeyPressed(KEY_TWO)) {
                 tenPulls = true;
@@ -165,22 +175,26 @@ int main() {
             }
         }
 
+        // 10 pulls Screen
         else if (tenPulls) {
             for (int i = 0; i < 10; i++) {
-                pullChance(pull_counter, Common_chance, S_chance, SS_chance, SSS_chance);
+                PullChance(pull_counter, Common_chance, S_chance, SS_chance, SSS_chance);
                 TextCounter(pull_counter, SCREEN_WIDTH);
+                AnimationTimer(timer, frameTime, currentFrame);
 
                 indexToggle = true;
                 checker = true;
                 currentScreen = SCREEN_PULL;
-                // Perform the pull animation for each pull
-                AnimationTimer(timer2, frameTime, currentFrame);
 
+                // Gacha System
+                // Note: checker bool is present to avoid random number to continue 
+                // generating and stop repeating actions
                 if (checker) {
                     PullToggle(SSS_chance, SS_chance, S_chance, S_counter, SSS_rarity, SS_rarity, S_rarity, common_rarity);
                     checker = false;
                 }
 
+                // Rarity switch
                 if (common_rarity) {
                     HandleRarity(indexToggle, common_rarity, randomIndex, prompt_common, sprite, CommonTexturesCount, pull_counter,
                         CommonTextures, ugly_cat, blink_mf, mr_peebles, serious_cat, gigacat);
@@ -195,19 +209,17 @@ int main() {
                     pull_counter = 0;
                 }
                 else if (SSS_rarity) {
-                    HandleRarity(indexToggle, SSS_rarity, randomIndex, prompt_S, sprite, SSS_TexturesCount, pull_counter,
+                    HandleRarity(indexToggle, SSS_rarity, randomIndex, prompt_SSS, sprite, SSS_TexturesCount, pull_counter,
                         SSS_Textures, dancing_cat, popcat, maxwell, maxwell, maxwell);
                     happy_cat = true;
                 }
-
-                MR_PEEBLES(mr_peebles, peebles_switch, peebles, BG_GAME,
-                    box2, sprite, SCREEN_WIDTH, SCREEN_HEIGHT, frames, currentFrame);
 
                 // Draw the pull animation
                 DrawTexture(BG_GAME, 0, 0, WHITE);
                 PlaySound(SFXpull);
 
-                while (IsSoundPlaying(SFXpull)) {
+
+                while (IsSoundPlaying(SFXpull)) {  //Allows animation to play for each sprite for each sound
                     AnimationTimer(timer, frameTime, currentFrame);
 
                     BeginDrawing();
@@ -220,24 +232,28 @@ int main() {
                         prompt_common, prompt_S, prompt_SS, prompt_SSS);
 
                     // Update the display
-                    WindowDisplay(currentScreen, previousScreen, starting, pageflip, indexToggle, pull_counter, checker);
+                    WindowDisplay(currentScreen, previousScreen, starting, pageflip, indexToggle, pull_counter, checker, space_counter);
                     PlayMusic(bgm1, bgm2, muted, bgm_changer);
                     EndDrawing();
 
                 }
 
+                // Mr Peebles switch
                 MR_PEEBLES(mr_peebles, peebles_switch, peebles, BG_GAME,
                     box2, sprite, SCREEN_WIDTH, SCREEN_HEIGHT, frames, currentFrame);
-                RarityPromptToggle(prompt_common, prompt_S, prompt_SS, prompt_SSS);
+                TextRarityToggle(prompt_common, prompt_S, prompt_SS, prompt_SSS);
             }
 
             tenPulls = false;
         }
 
+        // Pull Screen
         else if (currentScreen == SCREEN_PULL) {
-            timer2 += GetFrameTime();
-
-
+            AnimationTimer(timer, frameTime, currentFrame);
+            
+            // Gacha System
+            // Note: checker bool is present to avoid random number to continue 
+            // generating and stop repeating actions
             if (checker) {
                 PullToggle(SSS_chance, SS_chance, S_chance, S_counter,
                     SSS_rarity, SS_rarity, S_rarity, common_rarity);
@@ -252,11 +268,7 @@ int main() {
                 checker = false;
             }
 
-            if (timer2 >= frameTime) {
-                currentFrame = (currentFrame + 1) % 6;
-                timer2 = 0.0f;
-            }
-
+            // Rarity switch
             if (common_rarity) {
                 HandleRarity(indexToggle, common_rarity, randomIndex, prompt_common, sprite, CommonTexturesCount, pull_counter,
                     CommonTextures, ugly_cat, blink_mf, mr_peebles, serious_cat, gigacat);
@@ -276,39 +288,39 @@ int main() {
                 happy_cat = true;
             }
 
+            // Draw the pull animation
             Animation(BG_GAME, box2, sprite, SCREEN_WIDTH, SCREEN_HEIGHT, frames, currentFrame);
             TextCounter(pull_counter, SCREEN_WIDTH);
             RarityText(SCREEN_WIDTH, SCREEN_HEIGHT, currentScreen,
                 prompt_common, prompt_S, prompt_SS, prompt_SSS);
             
-
+            // Mr Peebles switch
             MR_PEEBLES(mr_peebles, peebles_switch, peebles, BG_GAME,
                 box2, sprite, SCREEN_WIDTH, SCREEN_HEIGHT, frames, currentFrame);
         }
 
+
+        // Cat Collection Screen
         else if (currentScreen == SCREEN_CATCOLLECTION1) {
             DrawTexture(BG_COLLECTION1, 0, 0, WHITE);
             Collection(SCREEN_WIDTH, SCREEN_HEIGHT, ugly_cat, blink_mf, mr_peebles, serious_cat, gigacat,
                 _ugly_cat, _blink_mf, _mr_peebles, _serious_cat, _gigacat);
 
         }
-
         else if (currentScreen == SCREEN_CATCOLLECTION2) {
             DrawTexture(BG_COLLECTION1, 0, 0, WHITE);
             Collection(SCREEN_WIDTH, SCREEN_HEIGHT, long_cat, el_gato, smudge, bingus, banana,
                 _long_cat, _el_gato, _smudge, _bingus, _banana);
         }
-
         else if (currentScreen == SCREEN_CATCOLLECTION3) {
             DrawTexture(BG_COLLECTION2, 0, 0, WHITE);
             Collection2(SCREEN_WIDTH, SCREEN_HEIGHT, dancing_cat, popcat, maxwell,
                 _dancing_cat, _popcat, _maxwell);
         }
-
         else if (currentScreen == SCREEN_CATCOLLECTION4) {
             DrawTexture(BG_COLLECTION3, 0, 0, WHITE);
             if (happy_cat) {
-                DrawTexture(_happy_cat, (SCREEN_WIDTH / 2 - 120), SCREEN_HEIGHT / 2 - 320, WHITE);
+                DrawTexture(_happy_cat, (SCREEN_WIDTH / 2 - 210), SCREEN_HEIGHT / 2 - 280, WHITE);
             }
         }
 
@@ -318,13 +330,12 @@ int main() {
 
     CloseWindow();
 
-    //Unloading Textures
+    // Unloading Textures
 
     for (int i = 0; i < CommonTexturesCount; i++) {
         UnloadTexture(CommonTextures[i]);
         UnloadTexture(S_Textures[i]);
     }
-
     for (int i = 0; i < SS_TexturesCount; i++) {
         UnloadTexture(SS_Textures[i]);
     }
