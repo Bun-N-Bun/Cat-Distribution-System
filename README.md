@@ -46,16 +46,22 @@ Raylib is required to compile and run the project. Follow the official installat
       - Linux: Use g++ (usually pre-installed or available via sudo apt install g++).
       - macOS: Install Xcode Command Line Tools (xcode-select --install).
 3. Clone the Repository:
-    - Clone or download the project files from the repository:  
-      `git clone https://github.com/your-repo/cat-distribution-system.git
-cd cat-distribution-system`
+    - Clone or download the project files from the repository:
+      ```  
+      git clone https://github.com/your-repo/cat-distribution-system.git
+      cd cat-distribution-system`
+      ```
 4. Compile the Code:
     - Use the following command to compile the project with Raylib:  
-    `g++ main.cpp gacha.cpp music.cpp screen.cpp text.cpp -o cat_gacha -lraylib -lopengl32 -lgdi32 -lwinmm
-Replace -lopengl32 -lgdi32 -lwinmm with the appropriate libraries for your OS (e.g., -lGL -lm -lpthread -ldl on Linux).`
+    ```
+    g++ main.cpp gacha.cpp music.cpp screen.cpp text.cpp -o cat_gacha -lraylib -lopengl32 -lgdi32 -lwinmm
+    Replace -lopengl32 -lgdi32 -lwinmm with the appropriate libraries for your OS (e.g., -lGL -lm -lpthread -ldl on Linux).
+    ```
 5. Run the Executable:
     - After compiling, run the generated executable:
-    `./cat_gacha`
+    ```
+    ./cat_gacha
+    ```
 
 ### Running on an IDE
 If you prefer using an IDE like Visual Studio Code
