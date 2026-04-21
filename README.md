@@ -1,9 +1,15 @@
 # Cat Distribution System: A Cat Gacha Simulator
+
+<img width="1400" height="800" alt="background" src="https://github.com/user-attachments/assets/e2603bd0-c12a-4063-9747-b4d19f32bcb5" />
+
 ## Overview
 Cat Distribution System is a gacha simulator game designed for cat lovers and gacha enthusiasts. Inspired by popular gacha games like Genshin Impact and Honkai Star Rail, this project allows players to experience the thrill of gacha mechanics without spending any in-game currency. The game features a variety of cats from popular culture, categorized into different rarities (Common, S, SS, SSS), and incorporates gacha mechanics such as the pity system and guarantee system.
 
 ---
 ## Features
+
+<img width="1187" height="668" alt="image" src="https://github.com/user-attachments/assets/fd07761d-f867-48d7-b53e-347ed5e10301" />
+
 - Gacha Mechanics: Players can perform single or ten pulls to collect cats of varying rarities.
 - Rarity System: Cats are categorized into four rarities:
 - Common: Low rarity, frequently pulled.
@@ -17,6 +23,9 @@ Cat Distribution System is a gacha simulator game designed for cat lovers and ga
 
 ---
 ## Objectives
+
+<img width="1196" height="676" alt="image" src="https://github.com/user-attachments/assets/b2132c31-40eb-4ccd-b125-51d22f225933" />
+
 1. To create a gacha game that simulates the mechanics of popular gacha games without requiring in-game currency.
 2. To provide a fun and engaging experience for cat lovers by featuring cats from popular culture as collectible characters.
 3. To implement gacha systems such as the pity system and guarantee system to replicate the thrill of pulling rare characters.
@@ -76,16 +85,12 @@ If you prefer using an IDE like Visual Studio Code
 
 ---
 ## Gameplay:
+
+<img width="1350" height="766" alt="image" src="https://github.com/user-attachments/assets/b4820e0a-6b00-4e09-9a60-e6934a569bce" />
+
 - Follow the on-screen instructions to perform single or ten pulls.
 - View your pulled cats in the cat collection screen.
 - Enjoy the thrill of pulling rare cats without any cost!
-
----
-## Sample User Interface
-The game features a simple and intuitive user interface:
-- Main Screen: Options to perform single or ten pulls.
-- Pity Counter: Displays the number of pulls until the next guaranteed rare cat.
-- Cat Collection Screen: Shows all the cats pulled by the player.
 
 ---
 ## Acknowledgment
@@ -93,4 +98,4 @@ This project is submitted in partial fulfillment of the requirements for CS121 C
 
 ## Developers
 - Krystal Heart M. Bacalso
--  Javier M. Raut
+- Javier M. Raut
